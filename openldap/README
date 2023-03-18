@@ -1,15 +1,27 @@
 
 This `Dockerfile` will install OpenLDAP and LDAP utilities, configure the OpenLDAP server with the provided environment variables, and start the OpenLDAP service on ports 389 (LDAP) and 636 (LDAPS).
 
+
+These will insert four organizations (`org1`, `org2`, `org3`, and `org4`), four groups (`group1`, `group2`, `group3`, and `group4`), and four users (`user1`, `user2`, `user3`, and `user4`) into the OpenLDAP directory.
+
+Once the container is running, you can use an LDAP client, such as `ldapsearch`, to verify that the organizations, groups, and users have been inserted correctly:
+
+~~~
+ldapsearch -x -D cn=admin,dc=mydomain,dc=com -w secret -b dc=mydomain,dc=com
+~~~
+
+This command will list all entries in the `dc=mydomain,dc=com` subtree of the OpenLDAP directory. You should see the four organizations, four groups, and four users that you inserted in the output.
+
 Note that you should replace the values of the environment variables with the appropriate values for your LDAP configuration. Once you have created the `Dockerfile`, you can build the Docker image with the following command:
 
+~~~
 docker build -t my-ldap-image .
-
+~~~
 
 And then you can run a container from the image with the following command:
-
+~~~
 docker run -d --name my-ldap-container -p 389:389 -p 636:636 my-ldap-image
-
+~~~
 
 This will start the OpenLDAP service inside the container and expose the LDAP and LDAPS ports on the host.
 
