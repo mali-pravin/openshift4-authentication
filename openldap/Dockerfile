@@ -74,3 +74,101 @@ RUN echo "slapd slapd/internal/generated_adminpw password $LDAP_ADMIN_PASSWORD" 
 
     #Metadata
     LABEL maintainer="connectwithpravinmali@gmail.com"
+    
+# Insert organizations
+echo "dn: ou=org1,$LDAP_BASE_DN" > /tmp/org1.ldif && \
+echo "objectClass: organizationalUnit" >> /tmp/org1.ldif && \
+echo "ou: org1" >> /tmp/org1.ldif && \
+echo "" >> /tmp/org1.ldif && \
+echo "dn: ou=org2,$LDAP_BASE_DN" > /tmp/org2.ldif && \
+echo "objectClass: organizationalUnit" >> /tmp/org2.ldif && \
+echo "ou: org2" >> /tmp/org2.ldif && \
+echo "" >> /tmp/org2.ldif && \
+echo "dn: ou=org3,$LDAP_BASE_DN" > /tmp/org3.ldif && \
+echo "objectClass: organizationalUnit" >> /tmp/org3.ldif && \
+echo "ou: org3" >> /tmp/org3.ldif && \
+echo "" >> /tmp/org3.ldif && \
+echo "dn: ou=org4,$LDAP_BASE_DN" > /tmp/org4.ldif && \
+echo "objectClass: organizationalUnit" >> /tmp/org4.ldif && \
+echo "ou: org4" >> /tmp/org4.ldif && \
+echo "" >> /tmp/org4.ldif && \
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org1.ldif && \
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org2.ldif && \
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org3.ldif && \
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org4.ldif && \
+rm /tmp/org1.ldif && \
+rm /tmp/org2.ldif && \
+rm /tmp/org3.ldif && \
+rm /tmp/org4.ldif
+
+# Insert groups
+echo "dn: cn=group1,ou=org1,$LDAP_BASE_DN" > /tmp/group1.ldif && \
+echo "objectClass: groupOfNames" >> /tmp/group1.ldif && \
+echo "cn: group1" >> /tmp/group1.ldif && \
+echo "member: cn=user1,ou=org1,$LDAP_BASE_DN" >> /tmp/group1.ldif && \
+echo "member: cn=user2,ou=org1,$LDAP_BASE_DN" >> /tmp/group1.ldif && \
+echo "" >> /tmp/group1.ldif && \
+echo "dn: cn=group2,ou=org2,$LDAP_BASE_DN" > /tmp/group2.ldif && \
+echo "objectClass: groupOfNames" >> /tmp/group2.ldif && \
+echo "cn: group2" >> /tmp/group2.ldif && \
+echo "member: cn=user3,ou=org2,$LDAP_BASE_DN" >> /tmp/group2.ldif && \
+echo "member: cn=user4,ou=org2,$LDAP_BASE_DN" >> /tmp/group2.ldif && \
+echo "" >> /tmp/group2.ldif && \
+echo "dn: cn=group3,ou=org3,$LDAP_BASE_DN" > /tmp/group3.ldif && \
+echo "objectClass: groupOfNames" >> /tmp/group3.ldif && \
+echo "cn: group3" >> /tmp/group3.ldif &&
+echo "member: cn=user1,ou=org3,$LDAP_BASE_DN" >> /tmp/group3.ldif &&
+echo "member: cn=user3,ou=org3,$LDAP_BASE_DN" >> /tmp/group3.ldif &&
+echo "" >> /tmp/group3.ldif &&
+echo "dn: cn=group4,ou=org4,$LDAP_BASE_DN" > /tmp/group4.ldif &&
+echo "objectClass: groupOfNames" >> /tmp/group4.ldif &&
+echo "cn: group4" >> /tmp/group4.ldif &&
+echo "member: cn=user2,ou=org4,$LDAP_BASE_DN" >> /tmp/group4.ldif &&
+echo "member: cn=user4,ou=org4,$LDAP_BASE_DN" >> /tmp/group4.ldif &&
+echo "" >> /tmp/group4.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group1.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group2.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group3.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group4.ldif &&
+rm /tmp/group1.ldif &&
+rm /tmp/group2.ldif &&
+rm /tmp/group3.ldif &&
+rm /tmp/group4.ldif
+
+#Insert users
+echo "dn: cn=user1,ou=org1,$LDAP_BASE_DN" > /tmp/user1.ldif &&
+echo "objectClass: inetOrgPerson" >> /tmp/user1.ldif &&
+echo "cn: user1" >> /tmp/user1.ldif &&
+echo "sn: user1" >> /tmp/user1.ldif &&
+echo "givenName: user1" >> /tmp/user1.ldif &&
+echo "userPassword: $(slappasswd -s user1)" >> /tmp/user1.ldif &&
+echo "" >> /tmp/user1.ldif &&
+echo "dn: cn=user2,ou=org1,$LDAP_BASE_DN" > /tmp/user2.ldif &&
+echo "objectClass: inetOrgPerson" >> /tmp/user2.ldif &&
+echo "cn: user2" >> /tmp/user2.ldif &&
+echo "sn: user2" >> /tmp/user2.ldif &&
+echo "givenName: user2" >> /tmp/user2.ldif &&
+echo "userPassword: $(slappasswd -s user2)" >> /tmp/user2.ldif &&
+echo "" >> /tmp/user2.ldif &&
+echo "dn: cn=user3,ou=org2,$LDAP_BASE_DN" > /tmp/user3.ldif &&
+echo "objectClass: inetOrgPerson" >> /tmp/user3.ldif &&
+echo "cn: user3" >> /tmp/user3.ldif &&
+echo "sn: user3" >> /tmp/user3.ldif &&
+echo "givenName: user3" >> /tmp/user3.ldif &&
+echo "userPassword: $(slappasswd -s user3)" >> /tmp/user3.ldif &&
+echo "" >> /tmp/user3.ldif &&
+echo "dn: cn=user4,ou=org2,$LDAP_BASE_DN" > /tmp/user4.ldif &&
+echo "objectClass: inetOrgPerson" >> /tmp/user4.ldif &&
+echo "cn: user4" >> /tmp/user4.ldif &&
+echo "sn: user4" >> /tmp/user4.ldif &&
+echo "givenName: user4" >> /tmp/user4.ldif &&
+echo "userPassword: $(slappasswd -s user4)" >> /tmp/user4.ldif &&
+echo "" >> /tmp/user4.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user1.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user2.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user3.ldif &&
+ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user4.ldif &&
+rm /tmp/user1.ldif &&
+rm /tmp/user2.ldif &&
+rm /tmp/user3.ldif &&
+rm /tmp/user4.ldif   
