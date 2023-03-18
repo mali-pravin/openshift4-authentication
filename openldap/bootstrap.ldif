@@ -1,0 +1,108 @@
+# Define the top-level entry
+dn: dc=my-domain,dc=com
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: My Organization
+dc: my-domain
+
+# Define the admin user
+dn: cn=admin,dc=my-domain,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: {SSHA}password
+description: LDAP administrator
+
+# Define the base organizational units
+dn: ou=org1,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: org1
+
+dn: ou=org2,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: org2
+
+# Define the organizations and their corresponding groups
+dn: ou=org1,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: org1
+
+dn: ou=org2,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: org2
+
+dn: ou=org3,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: org3
+
+dn: ou=org4,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: org4
+
+dn: cn=group1,ou=org1,dc=my-domain,dc=com
+objectClass: groupOfNames
+cn: group1
+member: cn=user1,ou=org1,dc=my-domain,dc=com
+member: cn=user2,ou=org1,dc=my-domain,dc=com
+
+dn: cn=group2,ou=org2,dc=my-domain,dc=com
+objectClass: groupOfNames
+cn: group2
+member: cn=user3,ou=org2,dc=my-domain,dc=com
+member: cn=user4,ou=org2,dc=my-domain,dc=com
+
+dn: cn=group3,ou=org3,dc=my-domain,dc=com
+objectClass: groupOfNames
+cn: group3
+member: cn=user1,ou=org3,dc=my-domain,dc=com
+member: cn=user3,ou=org3,dc=my-domain,dc=com
+
+dn: cn=group4,ou=org4,dc=my-domain,dc=com
+objectClass: groupOfNames
+cn: group4
+member: cn=user2,ou=org4,dc=my-domain,dc=com
+member: cn=user4,ou=org4,dc=my-domain,dc=com
+
+# Define the users
+dn: cn=user1,ou=org1,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+cn: user1
+sn: user1
+givenName: user1
+userPassword: user1
+
+dn: cn=user2,ou=org1,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+cn: user2
+sn: user2
+givenName: user2
+userPassword: user2
+
+dn: cn=user3,ou=org2,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+cn: user3
+sn: user3
+givenName: user3
+userPassword: user3
+
+dn: cn=user4,ou=org2,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+cn: user4
+sn: user4
+givenName: user4
+userPassword: user4
