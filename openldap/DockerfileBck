@@ -10,59 +10,59 @@ ENV LDAP_MANAGER_DN=cn=admin,dc=mydomain,dc=com
 ENV LDAP_MANAGER_PASSWORD=admin
 
 # Install OpenLDAP and LDAP utilities
-RUN apt-get update && \
-    apt-get install -y slapd ldap-utils && \
+RUN apt-get update && \ 
+    apt-get install -y slapd ldap-utils && \ 
     rm -rf /var/lib/apt/lists/*
 
 # Configure OpenLDAP
-RUN echo "slapd slapd/internal/generated_adminpw password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \
-    echo "slapd slapd/internal/adminpw password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \
-    echo "slapd slapd/password2 password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \
-    echo "slapd slapd/password1 password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \
-    echo "slapd slapd/dump_database_destdir string /var/backups/slapd-VERSION" | debconf-set-selections && \
-    echo "slapd slapd/domain string $LDAP_DOMAIN" | debconf-set-selections && \
-    echo "slapd shared/organization string $LDAP_ORGANIZATION" | debconf-set-selections && \
-    echo "slapd slapd/backend string MDB" | debconf-set-selections && \
-    echo "slapd slapd/purge_database boolean true" | debconf-set-selections && \
-    echo "slapd slapd/move_old_database boolean true" | debconf-set-selections && \
-    echo "slapd slapd/no_configuration boolean false" | debconf-set-selections && \
-    echo "slapd slapd/dump_database select when needed" | debconf-set-selections && \
-    echo "slapd slapd/allow_ldap_v2 boolean false" | debconf-set-selections && \
-    echo "slapd slapd/invalid_config boolean true" | debconf-set-selections && \
-    echo "slapd slapd/mirrormode boolean false" | debconf-set-selections && \
-    echo "slapd slapd/dbc_remove boolean true" | debconf-set-selections && \
-    echo "slapd slapd/password_mismatch note" | debconf-set-selections && \
-    echo "slapd slapd/ppolicy_schema_needs_update select abort installation" | debconf-set-selections && \
-    echo "slapd slapd/backend_upgrade boolean true" | debconf-set-selections && \
-    echo "slapd slapd/override bool true" | debconf-set-selections && \
-    echo "slapd slapd/allow_ldap_v2 note" | debconf-set-selections && \
-    echo "slapd slapd/dump_database_progress select" | debconf-set-selections && \
-    echo "slapd slapd/move_old_database_warning note" | debconf-set-selections && \
-    echo "slapd slapd/password_retype note" | debconf-set-selections && \
-    echo "slapd slapd/upgrade_slapcat_failure error" | debconf-set-selections && \
-    echo "slapd slapd/password1 seen true" | debconf-set-selections && \
-    slapd -d 0 && \
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/cosine.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/nis.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/inetorgperson.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/misc.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/openldap.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/ppolicy.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/samba.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/sudo.ldif &&
-    echo "dn: $LDAP_BASE_DN" > /tmp/base.ldif &&
-    echo "objectClass: top" >> /tmp/base.ldif &&
-    echo "objectClass: dcObject" >> /tmp/base.ldif &&
-    echo "objectClass: organization" >> /tmp/base.ldif &&
-    echo "o: $LDAP_ORGANIZATION" >> /tmp/base.ldif &&
-    echo "dc: $(echo $LDAP_DOMAIN | sed 's/./,dc=/g')" >> /tmp/base.ldif &&
-    echo "" >> /tmp/base.ldif &&
-    echo "dn: $LDAP_MANAGER_DN,$LDAP_BASE_DN" >> /tmp/base.ldif &&
-    echo "objectClass: organizationalRole" >> /tmp/base.ldif &&
-    echo "cn: Manager" >> /tmp/base.ldif &&
-    echo "userPassword: $(slappasswd -s $LDAP_MANAGER_PASSWORD)" >> /tmp/base.ldif &&
-    echo "" >> /tmp/base.ldif &&
-    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/base.ldif &&
+RUN echo "slapd slapd/internal/generated_adminpw password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \ 
+    echo "slapd slapd/internal/adminpw password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \ 
+    echo "slapd slapd/password2 password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \ 
+    echo "slapd slapd/password1 password $LDAP_ADMIN_PASSWORD" | debconf-set-selections && \ 
+    echo "slapd slapd/dump_database_destdir string /var/backups/slapd-VERSION" | debconf-set-selections && \ 
+    echo "slapd slapd/domain string $LDAP_DOMAIN" | debconf-set-selections && \ 
+    echo "slapd shared/organization string $LDAP_ORGANIZATION" | debconf-set-selections && \ 
+    echo "slapd slapd/backend string MDB" | debconf-set-selections && \ 
+    echo "slapd slapd/purge_database boolean true" | debconf-set-selections && \ 
+    echo "slapd slapd/move_old_database boolean true" | debconf-set-selections && \ 
+    echo "slapd slapd/no_configuration boolean false" | debconf-set-selections && \ 
+    echo "slapd slapd/dump_database select when needed" | debconf-set-selections && \ 
+    echo "slapd slapd/allow_ldap_v2 boolean false" | debconf-set-selections && \ 
+    echo "slapd slapd/invalid_config boolean true" | debconf-set-selections && \ 
+    echo "slapd slapd/mirrormode boolean false" | debconf-set-selections && \ 
+    echo "slapd slapd/dbc_remove boolean true" | debconf-set-selections && \ 
+    echo "slapd slapd/password_mismatch note" | debconf-set-selections && \ 
+    echo "slapd slapd/ppolicy_schema_needs_update select abort installation" | debconf-set-selections && \ 
+    echo "slapd slapd/backend_upgrade boolean true" | debconf-set-selections && \ 
+    echo "slapd slapd/override bool true" | debconf-set-selections && \ 
+    echo "slapd slapd/allow_ldap_v2 note" | debconf-set-selections && \ 
+    echo "slapd slapd/dump_database_progress select" | debconf-set-selections && \ 
+    echo "slapd slapd/move_old_database_warning note" | debconf-set-selections && \ 
+    echo "slapd slapd/password_retype note" | debconf-set-selections && \ 
+    echo "slapd slapd/upgrade_slapcat_failure error" | debconf-set-selections && \ 
+    echo "slapd slapd/password1 seen true" | debconf-set-selections && \ 
+    slapd -d 0 && \ 
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/cosine.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/nis.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/inetorgperson.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/misc.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/openldap.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/ppolicy.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/samba.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /etc/ldap/schema/sudo.ldif && \
+    echo "dn: $LDAP_BASE_DN" > /tmp/base.ldif && \
+    echo "objectClass: top" >> /tmp/base.ldif && \
+    echo "objectClass: dcObject" >> /tmp/base.ldif && \
+    echo "objectClass: organization" >> /tmp/base.ldif && \
+    echo "o: $LDAP_ORGANIZATION" >> /tmp/base.ldif && \
+    echo "dc: $(echo $LDAP_DOMAIN | sed 's/./,dc=/g')" >> /tmp/base.ldif && \
+    echo "" >> /tmp/base.ldif && \
+    echo "dn: $LDAP_MANAGER_DN,$LDAP_BASE_DN" >> /tmp/base.ldif && \
+    echo "objectClass: organizationalRole" >> /tmp/base.ldif && \
+    echo "cn: Manager" >> /tmp/base.ldif && \
+    echo "userPassword: $(slappasswd -s $LDAP_MANAGER_PASSWORD)" >> /tmp/base.ldif && \
+    echo "" >> /tmp/base.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/base.ldif && \
     rm /tmp/base.ldif
 
     #Expose OpenLDAP ports
@@ -76,99 +76,101 @@ RUN echo "slapd slapd/internal/generated_adminpw password $LDAP_ADMIN_PASSWORD" 
     LABEL maintainer="connectwithpravinmali@gmail.com"
     
 # Insert organizations
-echo "dn: ou=org1,$LDAP_BASE_DN" > /tmp/org1.ldif && \
-echo "objectClass: organizationalUnit" >> /tmp/org1.ldif && \
-echo "ou: org1" >> /tmp/org1.ldif && \
-echo "" >> /tmp/org1.ldif && \
-echo "dn: ou=org2,$LDAP_BASE_DN" > /tmp/org2.ldif && \
-echo "objectClass: organizationalUnit" >> /tmp/org2.ldif && \
-echo "ou: org2" >> /tmp/org2.ldif && \
-echo "" >> /tmp/org2.ldif && \
-echo "dn: ou=org3,$LDAP_BASE_DN" > /tmp/org3.ldif && \
-echo "objectClass: organizationalUnit" >> /tmp/org3.ldif && \
-echo "ou: org3" >> /tmp/org3.ldif && \
-echo "" >> /tmp/org3.ldif && \
-echo "dn: ou=org4,$LDAP_BASE_DN" > /tmp/org4.ldif && \
-echo "objectClass: organizationalUnit" >> /tmp/org4.ldif && \
-echo "ou: org4" >> /tmp/org4.ldif && \
-echo "" >> /tmp/org4.ldif && \
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org1.ldif && \
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org2.ldif && \
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org3.ldif && \
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org4.ldif && \
-rm /tmp/org1.ldif && \
-rm /tmp/org2.ldif && \
-rm /tmp/org3.ldif && \
-rm /tmp/org4.ldif
+RUN echo "dn: ou=org1,$LDAP_BASE_DN" > /tmp/org1.ldif && \ 
+    echo "objectClass: organizationalUnit" >> /tmp/org1.ldif && \ 
+    echo "ou: org1" >> /tmp/org1.ldif && \ 
+    echo "" >> /tmp/org1.ldif && \ 
+    echo "dn: ou=org2,$LDAP_BASE_DN" > /tmp/org2.ldif && \ 
+    echo "objectClass: organizationalUnit" >> /tmp/org2.ldif && \ 
+    echo "ou: org2" >> /tmp/org2.ldif && \ 
+    echo "" >> /tmp/org2.ldif && \ 
+    echo "dn: ou=org3,$LDAP_BASE_DN" > /tmp/org3.ldif && \ 
+    echo "objectClass: organizationalUnit" >> /tmp/org3.ldif && \ 
+    echo "ou: org3" >> /tmp/org3.ldif && \ 
+    echo "" >> /tmp/org3.ldif && \ 
+    echo "dn: ou=org4,$LDAP_BASE_DN" > /tmp/org4.ldif && \ 
+    echo "objectClass: organizationalUnit" >> /tmp/org4.ldif && \ 
+    echo "ou: org4" >> /tmp/org4.ldif && \ 
+    echo "" >> /tmp/org4.ldif && \ 
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org1.ldif && \ 
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org2.ldif && \ 
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org3.ldif && \ 
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/org4.ldif && \ 
+    rm /tmp/org1.ldif && \ 
+    rm /tmp/org2.ldif && \ 
+    rm /tmp/org3.ldif && \ 
+    rm /tmp/org4.ldif
 
 # Insert groups
-echo "dn: cn=group1,ou=org1,$LDAP_BASE_DN" > /tmp/group1.ldif && \
-echo "objectClass: groupOfNames" >> /tmp/group1.ldif && \
-echo "cn: group1" >> /tmp/group1.ldif && \
-echo "member: cn=user1,ou=org1,$LDAP_BASE_DN" >> /tmp/group1.ldif && \
-echo "member: cn=user2,ou=org1,$LDAP_BASE_DN" >> /tmp/group1.ldif && \
-echo "" >> /tmp/group1.ldif && \
-echo "dn: cn=group2,ou=org2,$LDAP_BASE_DN" > /tmp/group2.ldif && \
-echo "objectClass: groupOfNames" >> /tmp/group2.ldif && \
-echo "cn: group2" >> /tmp/group2.ldif && \
-echo "member: cn=user3,ou=org2,$LDAP_BASE_DN" >> /tmp/group2.ldif && \
-echo "member: cn=user4,ou=org2,$LDAP_BASE_DN" >> /tmp/group2.ldif && \
-echo "" >> /tmp/group2.ldif && \
-echo "dn: cn=group3,ou=org3,$LDAP_BASE_DN" > /tmp/group3.ldif && \
-echo "objectClass: groupOfNames" >> /tmp/group3.ldif && \
-echo "cn: group3" >> /tmp/group3.ldif &&
-echo "member: cn=user1,ou=org3,$LDAP_BASE_DN" >> /tmp/group3.ldif &&
-echo "member: cn=user3,ou=org3,$LDAP_BASE_DN" >> /tmp/group3.ldif &&
-echo "" >> /tmp/group3.ldif &&
-echo "dn: cn=group4,ou=org4,$LDAP_BASE_DN" > /tmp/group4.ldif &&
-echo "objectClass: groupOfNames" >> /tmp/group4.ldif &&
-echo "cn: group4" >> /tmp/group4.ldif &&
-echo "member: cn=user2,ou=org4,$LDAP_BASE_DN" >> /tmp/group4.ldif &&
-echo "member: cn=user4,ou=org4,$LDAP_BASE_DN" >> /tmp/group4.ldif &&
-echo "" >> /tmp/group4.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group1.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group2.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group3.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group4.ldif &&
-rm /tmp/group1.ldif &&
-rm /tmp/group2.ldif &&
-rm /tmp/group3.ldif &&
-rm /tmp/group4.ldif
+RUN echo "dn: cn=group1,ou=org1,$LDAP_BASE_DN" > /tmp/group1.ldif && \ 
+    echo "objectClass: groupOfNames" >> /tmp/group1.ldif && \ 
+    echo "cn: group1" >> /tmp/group1.ldif && \ 
+    echo "member: cn=user1,ou=org1,$LDAP_BASE_DN" >> /tmp/group1.ldif && \ 
+    echo "member: cn=user2,ou=org1,$LDAP_BASE_DN" >> /tmp/group1.ldif && \ 
+    echo "" >> /tmp/group1.ldif && \ 
+    echo "dn: cn=group2,ou=org2,$LDAP_BASE_DN" > /tmp/group2.ldif && \ 
+    echo "objectClass: groupOfNames" >> /tmp/group2.ldif && \ 
+    echo "cn: group2" >> /tmp/group2.ldif && \ 
+    echo "member: cn=user3,ou=org2,$LDAP_BASE_DN" >> /tmp/group2.ldif && \ 
+    echo "member: cn=user4,ou=org2,$LDAP_BASE_DN" >> /tmp/group2.ldif && \ 
+    echo "" >> /tmp/group2.ldif && \ 
+    echo "dn: cn=group3,ou=org3,$LDAP_BASE_DN" > /tmp/group3.ldif && \ 
+    echo "objectClass: groupOfNames" >> /tmp/group3.ldif && \ 
+    echo "cn: group3" >> /tmp/group3.ldif && \
+    echo "member: cn=user1,ou=org3,$LDAP_BASE_DN" >> /tmp/group3.ldif && \
+    echo "member: cn=user3,ou=org3,$LDAP_BASE_DN" >> /tmp/group3.ldif && \
+    echo "" >> /tmp/group3.ldif && \
+    echo "dn: cn=group4,ou=org4,$LDAP_BASE_DN" > /tmp/group4.ldif && \
+    echo "objectClass: groupOfNames" >> /tmp/group4.ldif && \
+    echo "cn: group4" >> /tmp/group4.ldif && \
+    echo "member: cn=user2,ou=org4,$LDAP_BASE_DN" >> /tmp/group4.ldif && \
+    echo "member: cn=user4,ou=org4,$LDAP_BASE_DN" >> /tmp/group4.ldif && \
+    echo "" >> /tmp/group4.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group1.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group2.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group3.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/group4.ldif && \
+    rm /tmp/group1.ldif && \
+    rm /tmp/group2.ldif && \
+    rm /tmp/group3.ldif && \
+    rm /tmp/group4.ldif
 
 #Insert users
-echo "dn: cn=user1,ou=org1,$LDAP_BASE_DN" > /tmp/user1.ldif &&
-echo "objectClass: inetOrgPerson" >> /tmp/user1.ldif &&
-echo "cn: user1" >> /tmp/user1.ldif &&
-echo "sn: user1" >> /tmp/user1.ldif &&
-echo "givenName: user1" >> /tmp/user1.ldif &&
-echo "userPassword: $(slappasswd -s user1)" >> /tmp/user1.ldif &&
-echo "" >> /tmp/user1.ldif &&
-echo "dn: cn=user2,ou=org1,$LDAP_BASE_DN" > /tmp/user2.ldif &&
-echo "objectClass: inetOrgPerson" >> /tmp/user2.ldif &&
-echo "cn: user2" >> /tmp/user2.ldif &&
-echo "sn: user2" >> /tmp/user2.ldif &&
-echo "givenName: user2" >> /tmp/user2.ldif &&
-echo "userPassword: $(slappasswd -s user2)" >> /tmp/user2.ldif &&
-echo "" >> /tmp/user2.ldif &&
-echo "dn: cn=user3,ou=org2,$LDAP_BASE_DN" > /tmp/user3.ldif &&
-echo "objectClass: inetOrgPerson" >> /tmp/user3.ldif &&
-echo "cn: user3" >> /tmp/user3.ldif &&
-echo "sn: user3" >> /tmp/user3.ldif &&
-echo "givenName: user3" >> /tmp/user3.ldif &&
-echo "userPassword: $(slappasswd -s user3)" >> /tmp/user3.ldif &&
-echo "" >> /tmp/user3.ldif &&
-echo "dn: cn=user4,ou=org2,$LDAP_BASE_DN" > /tmp/user4.ldif &&
-echo "objectClass: inetOrgPerson" >> /tmp/user4.ldif &&
-echo "cn: user4" >> /tmp/user4.ldif &&
-echo "sn: user4" >> /tmp/user4.ldif &&
-echo "givenName: user4" >> /tmp/user4.ldif &&
-echo "userPassword: $(slappasswd -s user4)" >> /tmp/user4.ldif &&
-echo "" >> /tmp/user4.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user1.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user2.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user3.ldif &&
-ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user4.ldif &&
-rm /tmp/user1.ldif &&
-rm /tmp/user2.ldif &&
-rm /tmp/user3.ldif &&
-rm /tmp/user4.ldif   
+RUN echo "dn: cn=user1,ou=org1,$LDAP_BASE_DN" > /tmp/user1.ldif && \
+    echo "objectClass: inetOrgPerson" >> /tmp/user1.ldif && \
+    echo "cn: user1" >> /tmp/user1.ldif && \
+    echo "sn: user1" >> /tmp/user1.ldif && \
+    echo "givenName: user1" >> /tmp/user1.ldif && \
+    echo "userPassword: $(slappasswd -s user1)" >> /tmp/user1.ldif && \
+    echo "" >> /tmp/user1.ldif && \
+    echo "dn: cn=user2,ou=org1,$LDAP_BASE_DN" > /tmp/user2.ldif && \
+    echo "objectClass: inetOrgPerson" >> /tmp/user2.ldif && \
+    echo "cn: user2" >> /tmp/user2.ldif && \
+    echo "sn: user2" >> /tmp/user2.ldif && \
+    echo "givenName: user2" >> /tmp/user2.ldif && \
+    echo "userPassword: $(slappasswd -s user2)" >> /tmp/user2.ldif && \
+    echo "" >> /tmp/user2.ldif && \
+    echo "dn: cn=user3,ou=org2,$LDAP_BASE_DN" > /tmp/user3.ldif && \
+    echo "objectClass: inetOrgPerson" >> /tmp/user3.ldif && \
+    echo "cn: user3" >> /tmp/user3.ldif && \
+    echo "sn: user3" >> /tmp/user3.ldif && \
+    echo "givenName: user3" >> /tmp/user3.ldif && \
+    echo "userPassword: $(slappasswd -s user3)" >> /tmp/user3.ldif && \
+    echo "" >> /tmp/user3.ldif && \
+    echo "dn: cn=user4,ou=org2,$LDAP_BASE_DN" > /tmp/user4.ldif && \
+    echo "objectClass: inetOrgPerson" >> /tmp/user4.ldif && \
+    echo "cn: user4" >> /tmp/user4.ldif && \
+    echo "sn: user4" >> /tmp/user4.ldif && \
+    echo "givenName: user4" >> /tmp/user4.ldif && \
+    echo "userPassword: $(slappasswd -s user4)" >> /tmp/user4.ldif && \
+    echo "" >> /tmp/user4.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user1.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user2.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user3.ldif && \
+    ldapadd -x -D $LDAP_MANAGER_DN -w $LDAP_MANAGER_PASSWORD -f /tmp/user4.ldif && \
+    rm /tmp/user1.ldif && \
+    rm /tmp/user2.ldif && \
+    rm /tmp/user3.ldif && \
+    rm /tmp/user4.ldif   
+
+
